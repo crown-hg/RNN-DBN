@@ -1,0 +1,13 @@
+armij 是armijo搜索步长函数
+choleskysol 是解Ax=b 其中A是对称正定的，利用cholesky分解求解
+deepest 是最速下降法函数
+diffm 是求函数fun0在x处的梯度
+fun0 是目标函数输入
+lowersol 是解下三角Lx=b 使用choleskysol 函数时调用它
+mdff2 求函数梯度
+newton 精确搜索牛顿法
+newtonamj 利用armijo搜索的newton法
+newtont   利用wolfe搜索的newton法
+test 测试程序函数
+lowersol 是解上三角Ux=b 使用choleskysol 函数时调用它
+wolfe 是wolfe搜索步长函数

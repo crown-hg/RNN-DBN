@@ -1,0 +1,23 @@
+clear;
+clc;
+tic;
+load('td01_link200_day20.mat');
+load('tl01_link200_day20.mat');
+addpath RBM/
+op.verbose=true;
+traindata1 = traindata(1:1500,:);
+trainlabels1 = trainlabels(1:1500,:);
+testdata = traindata(1:400,:);
+testlabels = trainlabels(1:400,:);
+models=dbnFit_logi(traindata1,[100 100],op,op);
+m=toplayer(models, traindata1, trainlabels1 );
+a2= logistic(testdata*m.W1 + repmat(m.b1,size(testdata,1),1));
+a3= logistic(a2*m.W2 + repmat(m.b2,size(a2,1),1));
+a4= logistic(a3*m.W3 + repmat(m.b3,size(a3,1),1));
+accuracy_e = 1-sum(sum(abs(a4-testlabels)./testlabels)/400)/200;
+accuracy_m = 1-sum(sum(abs(a4-testlabels)))/sum(sum(testlabels));
+figure(1);
+plot(1:200,sum(abs(a4-testlabels))./sum(testlabels),'*r');
+figure(2);
+plot(1:200,sum(abs(a4-testlabels)./testlabels)/400,'*r');
+toc;
