@@ -12,7 +12,7 @@ hidefunc=@logsig;
 
 %% 取数据
 delay=3;
-addpath /home/crown/hg/实验代码/data/
+addpath ../data/
 dataname=sprintf('new147k%d',delay);
 load(dataname);
 

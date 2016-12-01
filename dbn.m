@@ -10,7 +10,7 @@ topfunc=@tanh;
 hidefunc=@logsig;
 
 numperiod=4;
-addpath /home/crown/hg/实验代码/data/
+addpath ../data/
 dataname=sprintf('new147k%d',numperiod);
 load(dataname);
 
