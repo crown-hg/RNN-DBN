@@ -45,7 +45,7 @@ for i=1:size(data,1)
 end
 weektrain = weekflag(1:numtrain);
 weektest = weekflag(numtrain+1:numtrain+numtest);
-% % 
+
 traindata=traindata(weektrain==week,:);
 trainlabels=trainlabels(weektrain==week,:);
 testdata=testdata(weektest==week,:);
