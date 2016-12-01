@@ -1,6 +1,5 @@
 % agruname = sprintf('topFunc\thFunc\tdelay\tNH\tbpfunc\tbpmax\tWEEK\tDAY\tCOST\tMRE\tMAE\tTIME\tBADLINK');
-% filename=sprintf('~/hg/testResult/%s_RNN_pemsd05_stationNew147_train71_test18.txt',datestr(date));
-% fp = fopen(filename,'wt'); 
+% fp = fopen('~/hg/testResult/RNN_RBM_pemsd05_stationNew147_train71_test18.txt','wt'); 
 % fprintf(fp, '%s', agruname);
 % fclose(fp);
 t1=clock;
@@ -82,11 +81,15 @@ end
 testlabels=testlabels(testdaytime==day,:);
 
 %% 建模
+addpath RBM/
+op1.verbose=true;
+op1.maxepoch=50;
+net=rnn_dbnFit(traindata,hidelayer,trainlabels,delay,topfunc,hidefunc,op1,op1); %训练
+
 addpath RNN/
 options.Method = 'scg';
 options.display = 'on';
 options.maxIter =3000;
-net=1; % net在rnn_train要初始化
 [net,cost]=rnn_train(options,net,traindata,trainlabels,hidelayer,topfunc,hidefunc,delay);
 
 %% 测试
@@ -123,7 +126,7 @@ end
 result = sprintf('%s\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%.4f\t%.4f\t%.2f\t%.2f\t%.2f\t%s',...
                 func2str(topfunc),func2str(hidefunc),delay,hidelayer(1),options.Method,...
                 options.maxIter,week,day,cost,MRE,MAE,RMSE,time,l);
-filename=sprintf('~/hg/testResult/RNN_pemsd05_stationNew147_train71_test18.txt');
+filename=sprintf('~/hg/testResult/RNN_RBM_pemsd05_stationNew147_train71_test18.txt');
 fp = fopen(filename,'at'); 
 fprintf(fp, '\n%s', result);
 fclose(fp);
