@@ -82,7 +82,7 @@ testlabels=testlabels(testdaytime==day,:);
 
 %% 建模
 addpath RBM/
-op1.verbose=true;
+op1.verbose=false;
 op1.maxepoch=50;
 net=rnn_dbnFit(traindata,hidelayer,trainlabels,delay,topfunc,hidefunc,op1,op1); %训练
 

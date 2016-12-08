@@ -8,7 +8,7 @@ daytimesize=96;
 week = 1; %1是weekday工作日，0是weekend双休日
 day = 1;%1为daytime， 0为nighttime
 hidelayer = 100;
-topfunc=@tanh;
+topfunc=@logsig;
 hidefunc=@logsig;
 
 delay=3;
@@ -97,20 +97,18 @@ testlabels=testlabels(testdaytime==day,:);
 
 %% 建模
 addpath RBM/
-op1.verbose=true;
+op1.verbose=false;
 op1.maxepoch=50;
 net=change_dbnFit(traindata,hidelayer,trainlabels,delay,topfunc,hidefunc,op1,op1); %训练\
 
 addpath dbn_change/
 options.Method = 'scg';
-options.display = 'off';
-options.maxIter =5000;
-[net,cost]=change_dbn_train(options,net,traindata,trainlabels,hidelayer,topfunc,hidefunc,delay);
+options.display = 'on';
+options.maxIter =4000;
+[net1,cost]=change_dbn_train(options,net,traindata,trainlabels,hidelayer,topfunc,hidefunc,delay);
 
 %% 测试
-testdata=traindata;
-testlabels=trainlabels;
-[~,out]=change_dbn_forward(testdata,net,topfunc,hidefunc,delay);
+[~,out]=change_dbn_forward(testdata,net1,topfunc,hidefunc,delay);
 numtest = size(testlabels,1);
 dp=mapminmax('reverse',out,ps);
 dr=mapminmax('reverse',testlabels,ps);
@@ -142,7 +140,7 @@ end
 result = sprintf('%s\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%.4f\t%.4f\t%.2f\t%.2f\t%s',...
                 func2str(topfunc),func2str(hidefunc),delay,hidelayer(1),options.Method,...
                 options.maxIter,week,day,cost,MRE,MAE,time,l);
-filename=sprintf('~/hg/testResult/change_DBN_pemsd05_stationNew147_train71_test18.txt');
-fp = fopen(filename,'at'); 
-fprintf(fp, '\n%s', result);
-fclose(fp);
+% filename=sprintf('~/hg/testResult/change_DBN_pemsd05_stationNew147_train71_test18.txt');
+% fp = fopen(filename,'at'); 
+% fprintf(fp, '\n%s', result);
+% fclose(fp);

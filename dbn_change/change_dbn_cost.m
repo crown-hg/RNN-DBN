@@ -3,14 +3,15 @@ function [cost,grad]=change_dbn_cost(theta,input_size,hide_size,output_size,data
 net=change_dbn_thetatonet(theta,input_size,hide_size,output_size,delay);
 [s,o] = change_dbn_forward(data,net,topfunc,hidefunc,delay);
 y=labels;
-squared_error=0.5*sum((y-o).^2,1);
 m=size(labels,1);
-cost=1/m*sum(squared_error);
-
+% 均方误差
+% squared_error=0.5*sum((y-o).^2,1);
+% cost=1/m*sum(squared_error);
+% 交叉熵误差
+cost=-1/(m*147)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
 % 计算更新梯度
-m=size(labels,1);
-
-V_delta = -(y-o);
+% V_delta = -(y-o).*funcdiff(topfunc,o); %均方代价
+V_delta = -(y-o); %交叉熵代价
 Vgrad = 1/m*(s{delay}'*V_delta);
 cgrad = 1/m*sum(V_delta,1);
 

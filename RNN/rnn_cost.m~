@@ -4,17 +4,18 @@ net=rnn_thetatonet(theta,input_size,hide_size,output_size);
 [s,o] = rnn_forward(data,net,topfunc,hidefunc,delay); % !!!!
 % [data,labels]=divide_data(data, labels, delay); %totalRNN
 y=labels;
-[m,nl]=size(labels);
-
+m=size(labels,1);
 % 均方误差
 squared_error=0.5*sum((y-o).^2,1);
 cost=1/m*sum(squared_error);
 % 交叉熵误差
-% cost=-1/(m*nl)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
+cost=-1/(m*147)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
 
 % 计算更新梯度
-V_delta = -(y-o).*funcdiff(topfunc,o); %均方
-% V_delta = -(y-o); %交叉熵
+m=size(labels,1);
+
+% V_delta = -(y-o).*funcdiff(topfunc,o);
+V_delta = -(y-o);
 V_grad = 1/m*(s{delay}'*V_delta);
 
 e=cell(delay+1);

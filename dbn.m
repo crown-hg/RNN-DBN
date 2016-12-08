@@ -5,8 +5,8 @@ tic;
 daytimesize=96;
 week = 1; %1是weekday工作日，0是weekend双休日
 day = 1;%1为daytime，0为nighttime
-hidelayer = [100];
-topfunc=@tanh;
+hidelayer = [100,100];
+topfunc=@logsig;
 hidefunc=@logsig;
 
 numperiod=4;
@@ -73,7 +73,7 @@ testlabels = testlabels(testdaytime==day,:);
 %% 训练
 addpath RBM/
 numhide = size(hidelayer,2);
-op1.verbose=true;
+op1.verbose=false;
 op1.maxepoch=50;
 op2=op1;
 op3=op1;
@@ -83,14 +83,13 @@ model=dbnFit(traindata,hidelayer,trainlabels,topfunc,hidefunc,op1,op2,op3,op4,op
 toc;
 
 tic;
-addpath dbn/
+addpath dbn/.
 options.Method = 'scg';
-options.display = 'off';
-options.maxIter = 4000;
+options.display = 'on';
+options.maxIter = 3000;
 [m,cost] = bpFine(model, traindata, trainlabels, topfunc, hidefunc,options);
 % [m] = bp( model, traindata, trainlabels, topfunc, hidefunc);
 toc;
-
 
 numtest = size(testdata,1);
 a = runnet(testdata, m.W, m.b, numhide,topfunc,hidefunc);
@@ -122,8 +121,8 @@ end
 if isequal(hidefunc,@Softplus)
     hidefunc=@sp;
 end
-log=sprintf('%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%.4f\t%.4f\t%.2f\t%.2f\t%.2f\t%s',func2str(topfunc),func2str(hidefunc),options.Method,options.maxIter,numperiod,numhide,hidelayer(1),week,day,cost,MRE,MAE,RMSE,time,l);
-filename=sprintf('~/hg/testResult/DBN_pemsd05_stationNew147_train71_test18.txt');
-fp = fopen(filename,'at'); 
-fprintf(fp, '\n%s', log);
-fclose(fp);
+% log=sprintf('%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%.4f\t%.4f\t%.2f\t%.2f\t%.2f\t%s',func2str(topfunc),func2str(hidefunc),options.Method,options.maxIter,numperiod,numhide,hidelayer(1),week,day,cost,MRE,MAE,RMSE,time,l);
+% filename=sprintf('~/hg/testResult/DBN_pemsd05_stationNew147_train71_test18.txt');
+% fp = fopen(filename,'at'); 
+% fprintf(fp, '\n%s', log);
+% fclose(fp);

@@ -8,7 +8,7 @@ daytimesize=96;
 week = 1; %1是weekday工作日，0是weekend双休日
 day = 1;%1为daytime， 0为nighttime
 hidelayer = 100;
-topfunc=@tanh;
+topfunc=@retanh;
 hidefunc=@logsig;
 
 %% 取数据
@@ -113,16 +113,16 @@ MAE = sum(sum(abs(dp-dr)))/(numlink*numtest);
 RMSE = sqrt(sum(sum((dp-dr).^2))/(numlink*numtest));
 t2=clock;
 time=etime(t2,t1);
-plot(1:numlink,re,'r.');
+plot(1:numlink,re,'r*');
 if isequal(topfunc,@Softplus)
     topfunc=@sp;
 end
 if isequal(hidefunc,@Softplus)
     hidefunc=@sp;
 end
-result = sprintf('%s\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%.4f\t%.4f\t%.2f\t%.2f\t%.2f\t%s',...
+result = sprintf('%s\t%s\t%d\t%d\t%s\t%d\t%d\t%d\t%.4f\t%.4f\t%.2f\t%.2f\t%s',...
                 func2str(topfunc),func2str(hidefunc),delay,hidelayer(1),options.Method,...
-                options.maxIter,week,day,cost,MRE,MAE,RMSE,time,l);
+                options.maxIter,week,day,cost,MRE,MAE,time,l);
 filename=sprintf('~/hg/testResult/RNN_pemsd05_stationNew147_train71_test18.txt');
 fp = fopen(filename,'at'); 
 fprintf(fp, '\n%s', result);
