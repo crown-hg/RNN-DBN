@@ -1,0 +1,27 @@
+function [ Weight, bias ] = thetatowb( theta, numhide, numClasses, visibleSize, hiddenSize )
+% 把theta转化成权值W和b
+nh=nh;
+W=cell(1,nh+1);
+b=cell(1,nh+1);
+hv=hiddenSize*visibleSize;
+hh=hiddenSize*hiddenSize;
+% hn=hiddenSize*numClasses; %##
+hn=visibleSize*numClasses;
+for i=1:nh
+    if i==1
+        W{i}=reshape(theta(1:hv), visibleSize, hiddenSize);
+    else
+        W{i}=reshape(theta(hv+(i-2)*hh+1:hv+(i-1)*hh), hiddenSize, hiddenSize);
+    end
+end
+% W{numhide+1}=reshape(theta(hv+(numhide-1)*hh+1:hv+(numhide-1)*hh+hn),
+% hiddenSize, numClasses); 
+W{nh+1}=reshape(theta(hv+(nh-1)*hh+1:hv+(nh-1)*hh+hn), visibleSize, numClasses); %##
+for j=1:nh
+    b{j}=reshape(theta(hv+(nh-1)*hh+hn+(j-1)*hiddenSize+1:hv+(nh-1)*hh+hn+j*hiddenSize), 1, hiddenSize);
+end
+b{nh+1} = reshape(theta(hv+(nh-1)*hh+hn+nh*hiddenSize+1:hv+(nh-1)*hh+hn+nh*hiddenSize+numClasses), 1, numClasses);
+Weight = W;
+bias = b;
+end
+

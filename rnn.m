@@ -8,7 +8,7 @@ daytimesize=96;
 week = 1; %1是weekday工作日，0是weekend双休日
 day = 1;%1为daytime， 0为nighttime
 hidelayer = 100;
-topfunc=@retanh;
+topfunc=@logsig;
 hidefunc=@logsig;
 
 %% 取数据
@@ -50,27 +50,26 @@ for i=1:size(data,1)
 end
 weektrain = weekflag(1:numtrain);
 weektest = weekflag(numtrain+1:numtrain+numtest);
-trainnumsamples=size(trainlabels,1);
-wtrain=weektrain(delay+1:trainnumsamples);
 
 for i=1:delay
-traindata{i}=traindata{i}(wtrain==week,:);
+traindata{i}=traindata{i}(weektrain==week,:);
 end
-trainlabels=trainlabels(wtrain==week,:);
-testnumsamples=size(testlabels,1);
-wtest=weektest(delay+1:testnumsamples);
+trainlabels=trainlabels(weektrain==week,:);
+
 for i=1:delay
-testdata{i}=testdata{i}(wtest==week,:);
+testdata{i}=testdata{i}(weektest==week,:);
 end
-testlabels=testlabels(wtest==week,:);
+testlabels=testlabels(weektest==week,:);
 
 % 分day
 daytime=zeros(96,1);
 daytime(21:84)=1; %早上6点到晚上8点
-traindaytime=repmat(daytime,52,1);
-testdaytime=repmat(daytime,12,1);
-traindaytime=traindaytime(delay+1:52*96);
-testdaytime=testdaytime(delay+1:12*96);
+trainday=size(trainlabels,1)/96;
+testday=size(testlabels,1)/96;
+traindaytime=repmat(daytime,trainday,1);
+testdaytime=repmat(daytime,testday,1);
+traindaytime=traindaytime(delay+1:trainday*96);
+testdaytime=testdaytime(delay+1:testday*96);
 
 for i=1:delay
 traindata{i}=traindata{i}(traindaytime==day,:);
@@ -81,11 +80,11 @@ testdata{i}=testdata{i}(testdaytime==day,:);
 end
 testlabels=testlabels(testdaytime==day,:);
 
-%% 建模
+% 建模
 addpath RNN/
 options.Method = 'scg';
 options.display = 'on';
-options.maxIter =3000;
+options.maxIter =4000;
 net=1; % net在rnn_train要初始化
 [net,cost]=rnn_train(options,net,traindata,trainlabels,hidelayer,topfunc,hidefunc,delay);
 

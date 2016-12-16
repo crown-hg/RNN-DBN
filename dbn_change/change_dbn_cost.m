@@ -12,6 +12,7 @@ cost=-1/(m*147)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
 % 计算更新梯度
 % V_delta = -(y-o).*funcdiff(topfunc,o); %均方代价
 V_delta = -(y-o); %交叉熵代价
+
 Vgrad = 1/m*(s{delay}'*V_delta);
 cgrad = 1/m*sum(V_delta,1);
 

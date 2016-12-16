@@ -7,14 +7,14 @@ y=labels;
 [m,nl]=size(labels);
 
 % 均方误差
-squared_error=0.5*sum((y-o).^2,1);
-cost=1/m*sum(squared_error);
+% squared_error=0.5*sum((y-o).^2,1);
+% cost=1/m*sum(squared_error);
 % 交叉熵误差
-% cost=-1/(m*nl)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
+cost=-1/(m*nl)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
 
 % 计算更新梯度
-V_delta = -(y-o).*funcdiff(topfunc,o); %均方
-% V_delta = -(y-o); %交叉熵
+% V_delta = -(y-o).*funcdiff(topfunc,o); %均方
+V_delta = -(y-o); %交叉熵
 V_grad = 1/m*(s{delay}'*V_delta);
 
 e=cell(delay+1);

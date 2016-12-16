@@ -15,5 +15,8 @@ function diffdata = funcdiff( func, data )
        
    elseif isequal(func,@retanh)
        diffdata=(1-data.^2)./2;
+   
+   elseif isequal(func,@flinear)
+       diffdata=ones(size(data));
    end
 end

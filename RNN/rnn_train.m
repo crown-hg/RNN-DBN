@@ -25,7 +25,7 @@ addpath minFunc/
     output_size,data,labels,topfunc,hidefunc,delay),theta, options);
 
 
-% maxepoch = 100;
+% maxepoch = 500;
 %  datatrain=cell(1,delay);
 % for n=1:maxepoch
 %     for j=1:numsamples
@@ -33,13 +33,13 @@ addpath minFunc/
 %         datatrain{2}=data{2}(j,:);
 %         datatrain{3}=data{3}(j,:);
 %         labelstrain=labels(j,:);
-%         [cost,grad]=rnn_cost(theta,...
+%         [~,grad]=rnn_cost(theta,...
 %         input_size,hide_size,output_size,datatrain,labelstrain,topfunc,hidefunc,delay);
 %         theta =theta - 0.1*grad;
 % %         fprintf('sample\t%d\tcost\t%f\n',j,cost);
 %     end
 %     net=rnn_thetatonet(theta,input_size,hide_size,output_size);
-%     [s,o] = rnn_forward(data,net,topfunc,hidefunc,delay);
+%     [~,o] = rnn_forward(data,net,topfunc,hidefunc,delay);
 %     y=labels;
 %     squared_error=0.5*sum((y-o).^2,1);
 %     m=size(labels,1);

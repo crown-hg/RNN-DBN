@@ -4,10 +4,10 @@ t1=clock;
 tic;
 daytimesize=96;
 week = 1; %1是weekday工作日，0是weekend双休日
-day = 1;%1为daytime，0为nighttime
-hidelayer = [100,100];
-topfunc=@logsig;
-hidefunc=@logsig;
+day = 0;%1为daytime，0为nighttime
+hidelayer = [];
+topfunc=@flinear;
+hidefunc=@tanh;
 
 numperiod=4;
 addpath ../data/
@@ -17,7 +17,7 @@ numhide = size(hidelayer,2);
 
 %% PeMS数据
 numlink=size(labels,2);
-numtrain = 72*96; %前9个月，3月10日和9月17日是去掉的
+numtrain = 200*96; %前9个月，3月10日和9月17日是去掉的
 numtest = 18*96; %第10月
 traindata = data(1:numtrain,:);
 trainlabels = labels(1:numtrain,:);
@@ -70,14 +70,14 @@ model{1}.Wc=0.1*randn(147*numperiod,size(trainlabels,2));
 model{1}.cc=zeros(1,size(trainlabels,2));
 
 % 训练
-addpath RBM/
-op1.verbose=true;
-op1.maxepoch=50;
-op2=op1;
-op3=op1;
-op4=op1;
-op5=op1;
-model=dbnFit(traindata,hidelayer,trainlabels,topfunc,hidefunc,op1,op2,op3,op4,op5); %训练
+% addpath RBM/
+% op1.verbose=true;
+% op1.maxepoch=50;
+% op2=op1;
+% op3=op1;
+% op4=op1;
+% op5=op1;
+% model=dbnFit(traindata,hidelayer,trainlabels,topfunc,hidefunc,op1,op2,op3,op4,op5); %训练
 toc;
 
 tic;
@@ -85,8 +85,7 @@ addpath dbn/
 options.Method = 'scg';
 options.display = 'on';
 options.maxIter = 100;
-costtype='square'; %cross
-[m,cost] = bpFine(model, traindata, trainlabels, topfunc, hidefunc,options,costtype);
+[m,cost] = bpFine(model, traindata, trainlabels, topfunc, hidefunc,options);
 % [m] = bp( model, traindata, trainlabels, topfunc, hidefunc);
 toc;
 
@@ -97,6 +96,7 @@ dp=mapminmax('reverse',h,ps);
 dr=mapminmax('reverse',testlabels,ps);
 dr(dr==0)=1;
 dp(dp<1)=5;
+dp(1:1727,:)=dp(2:172)
 re=sum(abs(dp-dr)./dr)/numtest;
 count=0;
 l='';
