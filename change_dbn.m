@@ -8,8 +8,8 @@ daytimesize=96;
 week = 0; %1是weekday工作日，0是weekend双休日
 day = 0;%1为daytime， 0为nighttime
 hidelayer = 100;
-topfunc=@logsig;
-hidefunc=@logsig;
+topfunc=@relu;
+hidefunc=@relu;
 
 delay=3;
 addpath ../data/
@@ -51,15 +51,15 @@ end
 weektrain = weekflag(1:numtrain);
 weektest = weekflag(numtrain+1:numtrain+numtest);
 
-for i=1:delay
-traindata{i}=traindata{i}(weektrain==week,:);
-end
-trainlabels=trainlabels(weektrain==week,:);
-
-for i=1:delay
-testdata{i}=testdata{i}(weektest==week,:);
-end
-testlabels=testlabels(weektest==week,:);
+% for i=1:delay
+% traindata{i}=traindata{i}(weektrain==week,:);
+% end
+% trainlabels=trainlabels(weektrain==week,:);
+% 
+% for i=1:delay
+% testdata{i}=testdata{i}(weektest==week,:);
+% end
+% testlabels=testlabels(weektest==week,:);
 
 % 分day
 daytime=zeros(96,1);
@@ -71,26 +71,26 @@ testdaytime=repmat(daytime,testday,1);
 traindaytime=traindaytime(delay+1:trainday*96);
 testdaytime=testdaytime(delay+1:testday*96);
 
-for i=1:delay
-traindata{i}=traindata{i}(traindaytime==day,:);
-end
-trainlabels=trainlabels(traindaytime==day,:);
-for i=1:delay
-testdata{i}=testdata{i}(testdaytime==day,:);
-end
-testlabels=testlabels(testdaytime==day,:);
+% for i=1:delay
+% traindata{i}=traindata{i}(traindaytime==day,:);
+% end
+% trainlabels=trainlabels(traindaytime==day,:);
+% for i=1:delay
+% testdata{i}=testdata{i}(testdaytime==day,:);
+% end
+% testlabels=testlabels(testdaytime==day,:);
 
 %% 建模
-% addpath RBM/
-% op1.verbose=false;
-% op1.maxepoch=50;
-% net=change_dbnFit(traindata,hidelayer,trainlabels,delay,topfunc,hidefunc,op1,op1); %训练\
-% 
-% addpath dbn_change/
-% options.Method = 'scg';
-% options.display = 'on';
-% options.maxIter =3000;
-% [net1,cost]=change_dbn_train(options,net,traindata,trainlabels,hidelayer,topfunc,hidefunc,delay);
+addpath RBM/
+op1.verbose=false;
+op1.maxepoch=50;
+net=change_dbnFit(traindata,hidelayer,trainlabels,delay,topfunc,hidefunc,op1,op1); %训练\
+
+addpath dbn_change/
+options.Method = 'scg';
+options.display = 'on';
+options.maxIter =2000;
+[net1,cost]=change_dbn_train(options,net,traindata,trainlabels,hidelayer,topfunc,hidefunc,delay);
 
 %% 测试
 [~,out]=change_dbn_forward(testdata,net1,topfunc,hidefunc,delay);

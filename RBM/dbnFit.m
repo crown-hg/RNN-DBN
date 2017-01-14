@@ -37,6 +37,7 @@ model=cell(H,1);
 % params.sparse_p=0.01;
 % params.sparse_lambda=2;
 % model{1}= GaussianRBM(X, params);
+
 if(H==1)
     model{H}= rbmFit(X, hidelayer(end), y, topfunc, hidefunc, varargin{H});
 else
@@ -53,8 +54,8 @@ else
             model{i}=rbm(model{i-1}.top, hidelayer(i), hidefunc);
         end
     end
-    m=bpauto(model, X,H-1,hidefunc);
-%the last RBM has access to labels too
+%     model=bpauto(model, X,H-1,hidefunc);
+% the last RBM has access to labels too
     if(numopts>=H)%这里是获得top层的RBM，另外标签是回归层，在top层之上
         model{H}= rbmFit(model{H-1}.top, hidelayer(end), y, topfunc, hidefunc, varargin{H});
     else

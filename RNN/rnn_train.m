@@ -5,11 +5,14 @@ input_size = size(data{1},2);
 hide_size = hidelayer;
 [numsamples,output_size] = size(labels);
 if isequal(net,1)
-    U = 0.1*randn(input_size,hide_size);
-    V = 0.1*randn(hide_size,output_size);
-    W = 0.1*randn(hide_size,hide_size);
-    b=zeros(1,hide_size);
-    c=zeros(1,output_size);
+    ru  = sqrt(6) / sqrt(input_size+hide_size);
+    U = 0.5*(rand(input_size,hide_size)*2*ru-ru);
+    rv  = sqrt(6) / sqrt(input_size+hide_size);
+    V = rand(hide_size,output_size)*2*rv-rv;
+    rw  = sqrt(6) / sqrt(input_size+hide_size);
+    W = 0.5*(rand(hide_size,hide_size)*2*rw-rw);
+    b = zeros(1,hide_size);
+    c = zeros(1,output_size);
 else
     U = net.U;
     V = net.V;

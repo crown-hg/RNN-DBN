@@ -23,15 +23,15 @@ theta=[theta;btheta];
 addpath minFunc/
 options.Method = 'scg';
 options.display = 'on';
-options.maxIter = 400;
+options.maxIter = 200;
 [opttheta, ~] = minFunc( @(p) bpcost( p ,...
                     numW-1,vn ,vn,hn, 0.0001, X, X, hidefunc, hidefunc,'square'),...
                      theta, options);
 
-[m.W, m.b]=thetatowb(opttheta, numW-1, vn, vn, hn);
+[Wt, bt]=thetatowb(opttheta, numW-1, vn, vn, hn);
+m=cell(numhide);
 for i=1:numhide
-    W{i}=model{i}.W;
-    b{i}=model{i}.b;
+    m{i}.W=Wt{i};
+    m{i}.b=bt{i};
 end
 end
-

@@ -6,21 +6,27 @@ hiddenSize=0;%##
 numClasses = size(labels,2);
 % numhide = size(m,1);
 numhide=0;%##
+% Wc=0.1*randn(hiddenSize,numClasses);% auto
+% bc=zeros(1,numClasses);% auto
 theta=[];
 b=[];
-
 for i=1:numhide
     theta = [theta;m{i}.W(:)];
     b=[b;m{i}.b(:)];
 end
+% theta = [theta;Wc(:)];% auto
+% b=[b;bc(:)]; %auto 
+% WC=m{i}.Wc';
 WC=m{1}.Wc';%##
 theta = [theta;WC(:)];
+% b = [b;m{i}.cc(:)];
 b = [b;m{1}.cc(:)];%##
 theta = [theta;b];
 addpath minFunc/
-[opttheta, cost] = minFunc( @(p) bpcost( p ,...
+for i=1:1
+[theta, cost] = minFunc( @(p) bpcost( p ,...
                     numhide,numClasses ,visibleSize,hiddenSize,lambda, data, labels, topfunc, hidefunc,costtype),...
                      theta, options);
-
-[model.W, model.b]=thetatowb(opttheta, numhide, numClasses, visibleSize, hiddenSize);
+end
+[model.W, model.b]=thetatowb(theta, numhide, numClasses, visibleSize, hiddenSize);
 end

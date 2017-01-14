@@ -13,6 +13,7 @@ for i=1:numhide+1
 end
 if isequal(costtype,'square')
     cost=1/m*sum(squared_error)+lambda/2*(ws);% 均方误差代价
+%     cost=1/m*sum(squared_error);
 else
     cost=-1/(m*nl)*sum(sum(y.*log(h)+(1-y).*log(1-h)));%交叉熵代价
 end

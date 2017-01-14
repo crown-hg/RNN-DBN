@@ -5,19 +5,20 @@ net=rnn_thetatonet(theta,input_size,hide_size,output_size);
 % [data,labels]=divide_data(data, labels, delay); %totalRNN
 y=labels;
 [m,nl]=size(labels);
-
+ws=sum(theta.^2);
 % 均方误差
-% squared_error=0.5*sum((y-o).^2,1);
-% cost=1/m*sum(squared_error);
+lamda=0.0001;
+squared_error=0.5*sum((y-o).^2,1);
+cost=1/m*sum(squared_error)+lamda*ws;
 % 交叉熵误差
-cost=-1/(m*nl)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
+% cost=-1/(m*nl)*sum(sum(y.*log(o)+(1-y).*log(1-o)));
 
 % 计算更新梯度
-% V_delta = -(y-o).*funcdiff(topfunc,o); %均方
-V_delta = -(y-o); %交叉熵
-V_grad = 1/m*(s{delay}'*V_delta);
+V_delta = -(y-o).*funcdiff(topfunc,o); %均方
+% V_delta = -(y-o); %交叉熵
+V_grad = 1/m*(s{delay}'*V_delta)+lamda*net.V;
 
-e=cell(delay+1);
+e=cell(delay+1,1);
 e{delay+1}=V_delta;
 e{delay}= (e{delay+1}*net.V').*funcdiff(hidefunc,s{delay});
 for i=delay-1:-1:1
@@ -31,14 +32,14 @@ sum_Ugrad=zeros(size(net.U));
 for i=1:delay
     sum_Ugrad=sum_Ugrad+data{i}'*e{i};
 end
-U_grad = 1/m*sum_Ugrad;
+U_grad = 1/m*sum_Ugrad+lamda*net.U;
 % U_grad = 1/m*(data{3}'*e3+data{2}'*e2+data{1}'*e1);
 
 sum_Wgrad=zeros(size(net.W));
 for i=1:delay-1
     sum_Wgrad=sum_Wgrad+s{i}'*e{i+1};
 end
-W_grad = 1/m*(sum_Wgrad);
+W_grad = 1/m*(sum_Wgrad)+lamda*net.W;
 % W_grad = 1/m*(s{2}'*e3+s{1}'*e2);
 
 sum_bgrad=zeros(size(net.b));
