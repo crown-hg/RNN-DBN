@@ -1,22 +1,22 @@
 clear;
-% numday:ÌìÊı£¬10
-% daytimesize£º¶àÉÙ¸ö15·ÖÖÓ£¬daytimesize
-% numlink£º¶àÉÙÌõÂ·£¬numlink
-conn=database('pemsdata','root','root','com.mysql.jdbc.Driver','jdbc:mysql://127.0.0.1:3306/pemsdata');
-numday = 363;
-numlink = 147;
+% numday:ï¿½ï¿½ï¿½ï¿½10
+% daytimesizeï¿½ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½15ï¿½ï¿½ï¿½Ó£ï¿½daytimesize
+% numlinkï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½numlink
+conn=database('pems','root','root','com.mysql.jdbc.Driver','jdbc:mysql://localhost:3306/pems');
+numday = 92;
+numlink = 198;
 daytimesize = 96;
-d=cell(363*96*3*147,3);
-% ÉÙstationid
-for i=1:363
+d=cell(numday*daytimesize*3*numlink,3);
+% ï¿½ï¿½stationid
+for i=1:numday
     tic;
-    s1 = sprintf('SELECT Time,Station,Totalflow from d05_2013_month12_station147 LIMIT %d,%d',(i-1)*daytimesize*3*numlink,daytimesize*3*numlink); 
+    s1 = sprintf('SELECT Time,Station,Totalflow from d05_2016_060708 LIMIT %d,%d',(i-1)*daytimesize*3*numlink,daytimesize*3*numlink); 
     cursf = fetch(exec(conn,s1));
-    d((i-1)*daytimesize*3*numlink+1:i*daytimesize*3*numlink,:) = cursf.data;
-    fprintf('µÚ%d×é ',i);
+    d((i-1)*daytimesize*3*numlink+1:i*daytimesize*3*numlink,:) = cursf.Data;
+    fprintf('ç¬¬%då¤©å®Œæˆ\n',i);
     toc;
 end
-stationid = d(1:147,2);
+stationid = d(1:numlink,2);
 d = sortrows(d,[2 1]);
 daydata =zeros(daytimesize*numlink*numday,3);
 for i=1:daytimesize*numlink*numday
@@ -30,4 +30,4 @@ end
 datarow=daydata(:,3)';
 [datarow,ps]=mapminmax(datarow,0,1);
 daydata(:,3)=datarow';
-save data/pemsd05_2013_day363_link147 daydata ps stationid;
+save pemsd05_2016060708_day92_link147 daydata ps stationid;

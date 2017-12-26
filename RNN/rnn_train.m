@@ -1,4 +1,4 @@
-function [net,cost] = rnn_train(options,net,data,labels,hidelayer,topfunc,hidefunc,delay)
+function [net,cost] = rnn_train(options,net,data,labels,testdata, testlabels, ps, hidelayer,topfunc,hidefunc,delay)
 % 这里是要搭建一个rnn
 
 input_size = size(data{1},2);
@@ -25,7 +25,7 @@ theta=[U(:);V(:);W(:);b(:);c(:)];
 
 addpath minFunc/
 [theta, cost] = minFunc( @(p) rnn_cost(p,input_size,hide_size,...
-    output_size,data,labels,topfunc,hidefunc,delay),theta, options);
+    output_size,data,labels,testdata, testlabels, ps, topfunc,hidefunc,delay),theta, options);
 
 
 % maxepoch = 500;

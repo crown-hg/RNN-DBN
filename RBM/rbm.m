@@ -1,6 +1,6 @@
 function [model, errors] = rbm(X, numhid, hidefunc, varargin)
 % 这个函数是用来建立一个两层的RBM，V的维度是X的列数，H的维度是numhid
-% varargin是用来设置RBM的参数的，通常把verbose设成true，就可以了，其他默认就行，当然也可以根据需求来改
+% varargin是用来设置RBM的参数的，�?常把verbose设成true，就可以了，其他默认就行，当然也可以根据�?��来改
 %Learn RBM with Bernoulli hidden and visible units
 %This is not meant to be applied to image data
 %code by Andrej Karpathy
@@ -9,21 +9,17 @@ function [model, errors] = rbm(X, numhid, hidefunc, varargin)
 %INPUTS: 
 %X              ... data. should be binary, or in [0,1] to be interpreted 训练数据
 %               ... as probabilities
-%numhid         ... number of hidden layers隐层节点数
-
+%numhid         ... number of hidden layers隐层节点�?
 %additional inputs (specified as name value pairs or in struct)
 %method         ... CD or SML 
-%eta            ... learning rate 动量学习率
-%momentum       ... momentum for smoothness amd to prevent overfitting 动量，快速收敛防止过拟合
+%eta            ... learning rate 动量学习�?%momentum       ... momentum for smoothness amd to prevent overfitting 动量，快速收敛防止过拟合
 %               ... NOTE: momentum is not recommended with SML
-%maxepoch       ... # of epochs: each is a full pass through train data 最大训练次数
+%maxepoch       ... # of epochs: each is a full pass through train data �?��训练次数
 %avglast        ... how many epochs before maxepoch to start averaging
 %               ... before. Procedure suggested for faster convergence by
 %               在使用平均化之前要运行多少次
 %               ... Kevin Swersky in his MSc thesis
-%penalty        ... weight decay factor 权重衰减项
-%batchsize      ... The number of training instances per batch 训练集中样本的个数
-%verbose        ... For printing progress 这个东西就是为了打印那一行字
+%penalty        ... weight decay factor 权重衰减�?%batchsize      ... The number of training instances per batch 训练集中样本的个�?%verbose        ... For printing progress 这个东西就是为了打印那一行字
 %anneal         ... Flag. If set true, the penalty is annealed linearly
 %               ... through epochs to 10% of its original value
 
@@ -92,9 +88,9 @@ phstates = zeros(numcases,numhid);
 nhstates = zeros(numcases,numhid);
 negdata = zeros(numcases,numdims);
 negdatastates = zeros(numcases,numdims);
-Winc  = zeros(numdims,numhid); %权值更新的大小
-binc = zeros(1,numhid); %隐层偏移更新的大小
-cinc = zeros(1,numdims); %显层偏移更新的大小
+Winc  = zeros(numdims,numhid); %权�?更新的大�?
+binc = zeros(1,numhid); %隐层偏移更新的大�?
+cinc = zeros(1,numdims); %显层偏移更新的大�?
 Wavg = W;
 bavg = b;
 cavg = c;
@@ -113,8 +109,8 @@ for epoch = 1:maxepoch
 		[numcases, numdims]=size(batchdata{batch});
 		data = batchdata{batch};
         
-        %go up 第一次从显层到隐层
-		ph = hidefunc(data*W + repmat(b,numcases,1));
+        %go up 第一次从显层到隐�?		
+        ph = hidefunc(data*W + repmat(b,numcases,1));
 		phstates = ph > rand(numcases,numhid);
         if (isequal(method,'SML'))
             if (epoch == 1 && batch == 1)
@@ -124,8 +120,8 @@ for epoch = 1:maxepoch
             nhstates = phstates;
         end
 		
-        %go down 第一次从隐层到显层
-		negdata = hidefunc(nhstates*W' + repmat(c,numcases,1));
+        %go down 第一次从隐层到显�?		
+        negdata = hidefunc(nhstates*W' + repmat(c,numcases,1));
 		negdatastates = negdata > rand(numcases,numdims);
 
         %go up one more time第二次显层到隐层
@@ -134,19 +130,18 @@ for epoch = 1:maxepoch
 		
         %update weights and biases
         dW = (data'*ph - negdata'*nh);  %v1*h1-v2h2 W的更新，这里是伯努利分布的所以用的negdatastate，如果不是则可以改成negdata
-        dc = sum(data) - sum(negdata);  %v1 - v2显层偏移的更新
-        db = sum(ph) - sum(nh); %h1-h2 隐层偏移的更新
-		Winc = momentum*Winc + eta*(dW/numcases - penalty*W); %W的带动量的更新的大小
+        dc = sum(data) - sum(negdata);  %v1 - v2显层偏移的更�?        
+        db = sum(ph) - sum(nh); %h1-h2 隐层偏移的更�?		
+        Winc = momentum*Winc + eta*(dW/numcases - penalty*W); %W的带动量的更新的大小
 		binc = momentum*binc + eta*(db/numcases);
 		cinc = momentum*cinc + eta*(dc/numcases); 
-		W = W + Winc; %W的更新
-		b = b + binc;
+		W = W + Winc; %W的更�?		b = b + binc;
 		c = c + cinc;
         
         if (epoch > avgstart)
             %超过45次apply averaging
-			Wavg = Wavg - (1/t)*(Wavg - W);%其实这一步就是把W的改变量从Winc变成了1/t*Winc,也就是减小了改变量
-			cavg = cavg - (1/t)*(cavg - c);
+			Wavg = Wavg - (1/t)*(Wavg - W);%其实这一步就是把W的改变量从Winc变成�?/t*Winc,也就是减小了改变�?			
+            cavg = cavg - (1/t)*(cavg - c);
 			bavg = bavg - (1/t)*(bavg - b);
 			t = t+1;
 		else
@@ -156,8 +151,7 @@ for epoch = 1:maxepoch
         end
         
         %accumulate reconstruction error
-        err= sum(sum( (data-negdata).^2 )); %这里为什么用negdata而不是negdatastates？
-		errsum = err + errsum;
+        err= sum(sum( (data-negdata).^2 )); %这里为什么用negdata而不是negdatastates�?		errsum = err + errsum;
     end
     
     errors(epoch)=errsum;
